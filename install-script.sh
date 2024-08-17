@@ -1,10 +1,16 @@
  #!/bin/bash
 
+if [[ $EUID -e 0 ]]; then
+  echo "This script shouldn't be run as root or with sudo it will ask for sudo password when needed only once"
+  echo "Exiting..."
+  exit 1
+fi
+
 MAIN_FILE_DIR=$(dirname "$(readlink -f "$0")")
 echo "Script directory: $MAIN_FILE_DIR"
 
 upd-ugr(){
-    sudo apt-get update -y && sudo apt upgrade -y
+  sudo apt-get update -y && sudo apt upgrade -y
 }
 
 
@@ -51,6 +57,11 @@ sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plug
 
 sudo docker run hello-world
 
+# add user to docker group and activate changes
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+
 upd-ugr
 
 #install ros2
@@ -94,20 +105,20 @@ mkdir -p ~/.local/share
 
 
 
-## install self updaeting discord
+## install self updaeting discord and install vencord
 if [ ! -d ~/.local/share/discord-updater ]; then
   echo "Installing discord updater"
   cd ~/.local/share
   git clone https://github.com/X-Lemon-X/discord-updater.git
-  cd discord-updater
-  sudo ./updater-discord.sh
-  CRON_JOB="* */1 * * * $HOME/.local/share/./updater-discord.sh"
+  discord-updater/./updater-discord.sh
+  CRON_JOB="* */1 * * * $HOME/.local/share/discord-updater/./updater-discord.sh"
   (sudo crontab -l | sudo grep -F "$CRON_JOB") || (sudo crontab -l; sudo echo "$CRON_JOB") | sudo crontab -
 else 
-  echo "Discord updater already installed"
+  echo "Discord updater already installed in: [$HOME/.local/share/discord-updater]"
 fi
 
 cd $MAIN_FILE_DIR
+
 
 upd-ugr
 sudo apt autoclean -y
