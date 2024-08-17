@@ -1,5 +1,8 @@
  #!/bin/bash
 
+MAIN_FILE_DIR=$(dirname "$(readlink -f "$0")")
+echo "Script directory: $MAIN_FILE_DIR"
+
 upd-ugr(){
     sudo apt-get update -y && sudo apt upgrade -y
 }
@@ -79,15 +82,32 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 # generate ssh-keyrings
 
-if [ -d ~/.ssh/id_ed25519.pub ] then
-    ssh-keygen -t ed25519
-    echo "Your ssh puiblic key"
-    cat ~/.ssh/id_ed25519.pub
+if [ ! -d ~/.ssh/id_ed25519.pub ]; then
+  ssh-keygen -t ed25519
+  echo "Your ssh puiblic key"
+  cat ~/.ssh/id_ed25519.pub
 fi
 
 # creat eneccessary directioies
 mkdir -p ~/.local/bin
+mkdir -p ~/.local/share
 
+
+
+## install self updaeting discord
+if [ ! -d ~/.local/share/discord-updater ]; then
+  echo "Installing discord updater"
+  cd ~/.local/share
+  git clone https://github.com/X-Lemon-X/discord-updater.git
+  cd discord-updater
+  sudo ./updater-discord.sh
+  CRON_JOB="* */1 * * * $HOME/.local/share/./updater-discord.sh"
+  (sudo crontab -l | sudo grep -F "$CRON_JOB") || (sudo crontab -l; sudo echo "$CRON_JOB") | sudo crontab -
+else 
+  echo "Discord updater already installed"
+fi
+
+cd $MAIN_FILE_DIR
 
 upd-ugr
 sudo apt autoclean -y
