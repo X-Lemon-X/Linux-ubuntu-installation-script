@@ -16,6 +16,8 @@ upd-ugr(){
 
 upd-ugr
 
+
+#************************************************************************************************************************************************************************************
 #install required packages
 sudo apt install -y \
     cmake \
@@ -24,22 +26,28 @@ sudo apt install -y \
     git \
     build-essential \
     gdb \
-    nextcloud-desktop \
-    wireguard \
-    can-utils \
     python3-pip \
     qbittorrent \
     python3-venv \
+    wireguard \
+    nextcloud-desktop \
     nvtop \
     htop \
-    net-tools
+    net-tools \
+    can-utils \
+    stlink-tools \
+    dfu-util \
+    udevadm \
+    stty \
+    libncursesw5
 
+#************************************************************************************************************************************************************************************
 #install sna[ packages
 sudo snap install \
     bashtop
 
-upd-ugr
 
+#************************************************************************************************************************************************************************************
 #install docker
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl
@@ -64,8 +72,8 @@ newgrp docker
 
 upd-ugr
 
+#************************************************************************************************************************************************************************************
 #install ros2
-
 sudo apt install software-properties-common
 sudo add-apt-repository universe
 
@@ -78,8 +86,7 @@ sudo apt install ros-humble-ros-base -y
 sudo apt install ros-dev-tools -y
 source /opt/ros/humble/setup.bash
 
-upd-ugr
-
+#************************************************************************************************************************************************************************************
 # install vscode
 rm vscode.deb
 curl -L -o vscode.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
@@ -87,12 +94,13 @@ sudo dpkg -i vscode.deb
 rm vscode.deb
 
 
+#************************************************************************************************************************************************************************************
 # install ollama https://ollama.com/
 curl -fsSL https://ollama.com/install.sh | sh
 
 
+#************************************************************************************************************************************************************************************
 # generate ssh-keyrings
-
 if [ ! -d ~/.ssh/id_ed25519.pub ]; then
   ssh-keygen -t ed25519
   echo "Your ssh puiblic key"
@@ -105,6 +113,7 @@ mkdir -p ~/.local/share
 
 
 
+#************************************************************************************************************************************************************************************
 ## install self updaeting discord and install vencord
 if [ ! -d ~/.local/share/discord-updater ]; then
   echo "Installing discord updater"
@@ -116,14 +125,22 @@ if [ ! -d ~/.local/share/discord-updater ]; then
 else 
   echo "Discord updater already installed in: [$HOME/.local/share/discord-updater]"
 fi
-
 cd $MAIN_FILE_DIR
 
 
+#************************************************************************************************************************************************************************************
 upd-ugr
 sudo apt autoclean -y
 sudo apt autoremove -y
 sudo apt autoclean -y
 
+
+
+#************************************************************************************************************************************************************************************
+# configure user groups
+
+# add user to dialout group which allows access to serial ports
+sudo usermod -aG dialout $USER
+newgrp dialout
 
 
