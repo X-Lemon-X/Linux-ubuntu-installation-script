@@ -116,17 +116,34 @@ mkdir -p ~/.local/share
 
 #************************************************************************************************************************************************************************************
 ## install self updaeting discord and install vencord
-if [ ! -d ~/.local/share/discord-updater ]; then
-  echo "Installing discord updater"
-  cd ~/.local/share
-  git clone https://github.com/X-Lemon-X/discord-updater.git
-  discord-updater/./updater-discord.sh
-  CRON_JOB="* */1 * * * $HOME/.local/share/discord-updater/./updater-discord.sh"
-  (sudo crontab -l | sudo grep -F "$CRON_JOB") || (sudo crontab -l; sudo echo "$CRON_JOB") | sudo crontab -
-else 
-  echo "Discord updater already installed in: [$HOME/.local/share/discord-updater]"
-fi
-cd $MAIN_FILE_DIR
+# if [ ! -d ~/.local/share/discord-updater ]; then
+#   echo "Installing discord updater"
+#   cd ~/.local/share
+#   git clone https://github.com/X-Lemon-X/discord-updater.git
+#   discord-updater/./updater-discord.sh
+#   CRON_JOB="* */1 * * * $HOME/.local/share/discord-updater/./updater-discord.sh"
+#   (sudo crontab -l | sudo grep -F "$CRON_JOB") || (sudo crontab -l; sudo echo "$CRON_JOB") | sudo crontab -
+# else 
+#   echo "Discord updater already installed in: [$HOME/.local/share/discord-updater]"
+# fi
+
+#************************************************************************************************************************************************************************************
+# install discord
+outfile=$(mktemp)
+curl -L -o $outfile "https://discord.com/api/download?platform=linux&format=deb"
+sudo dpkg -i $outfile
+rm -rf $outfile
+
+
+#************************************************************************************************************************************************************************************
+# install vencord for discord
+set -e
+outfile=$(mktemp)
+trap 'rm -f "$outfile"' EXIT
+set -- "XDG_CONFIG_HOME=$XDG_CONFIG_HOME"
+curl -sS https://github.com/Vendicated/VencordInstaller/releases/latest/download/VencordInstallerCli-Linux --output "$outfile" --location 
+chmod +x "$outfile"
+sudo env "$@" "$outfile" -install -location /usr/share/discord
 
 
 #************************************************************************************************************************************************************************************
