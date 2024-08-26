@@ -30,6 +30,7 @@ sudo apt install -y \
     qbittorrent \
     python3-venv \
     wireguard \
+    resolvconf \
     nextcloud-desktop \
     nvtop \
     htop \
@@ -42,8 +43,8 @@ sudo apt install -y \
     libncursesw5 \
     curl \
     ethtool \
-    wireshark
-
+    wireshark \
+    curl
 
 #************************************************************************************************************************************************************************************
 #install sna[ packages
@@ -92,10 +93,10 @@ source /opt/ros/humble/setup.bash
 
 #************************************************************************************************************************************************************************************
 # install vscode
-rm vscode.deb
-curl -L -o vscode.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-sudo dpkg -i vscode.deb
-rm vscode.deb
+outfile=$(mktemp)
+curl -L -o $outfile "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
+sudo dpkg -i $outfile
+rm $outfile
 
 
 #************************************************************************************************************************************************************************************
@@ -106,7 +107,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 #************************************************************************************************************************************************************************************
 # generate ssh-keyrings
 if [ ! -d ~/.ssh/id_ed25519.pub ]; then
-  ssh-keygen -t ed25519
+  ssh-keygen -t ed25519 -N "" -f ~/.ssh/id_ed25519
   echo "Your ssh puiblic key"
   cat ~/.ssh/id_ed25519.pub
 fi
