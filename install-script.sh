@@ -10,7 +10,7 @@ MAIN_FILE_DIR=$(dirname "$(readlink -f "$0")")
 echo "Script directory: $MAIN_FILE_DIR"
 
 upd-ugr(){
-  sudo apt-get update -y && sudo apt upgrade -y
+  sudo apt-get-get update -y && sudo apt-get upgrade -y
 }
 
 
@@ -19,7 +19,7 @@ upd-ugr
 
 #************************************************************************************************************************************************************************************
 #install required packages
-sudo apt install -y \
+sudo apt-get install -y \
     cmake \
     make \
     ninja-build \
@@ -44,7 +44,8 @@ sudo apt install -y \
     curl \
     ethtool \
     wireshark \
-    curl
+    curl \
+    wakeonlan
 
 #************************************************************************************************************************************************************************************
 #install sna[ packages
@@ -56,14 +57,14 @@ sudo snap install \
 #install docker
 sudo apt-get update
 sudo apt-get install -y ca-certificates curl
-sudo install -m 0755 -d /etc/apt/keyrings
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
-sudo chmod a+r /etc/apt/keyrings/docker.asc
+sudo install -m 0755 -d /etc/apt-get/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt-get/keyrings/docker.asc
+sudo chmod a+r /etc/apt-get/keyrings/docker.asc
 
 echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt-get/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
   $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  sudo tee /etc/apt-get/sources.list.d/docker.list > /dev/null
 sudo apt-get update
 
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
@@ -79,16 +80,16 @@ upd-ugr
 
 #************************************************************************************************************************************************************************************
 #install ros2
-sudo apt install software-properties-common
-sudo add-apt-repository universe
+sudo apt-get install software-properties-common
+sudo add-apt-get-repository universe
 
-sudo apt update && sudo apt install curl -y
+sudo apt-get update && sudo apt-get install curl -y
 sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt-get/sources.list.d/ros2.list > /dev/null
 
-sudo apt update -y
-sudo apt install ros-humble-ros-base -y
-sudo apt install ros-dev-tools -y
+sudo apt-get update -y
+sudo apt-get install ros-humble-ros-base -y
+sudo apt-get install ros-dev-tools -y
 source /opt/ros/humble/setup.bash
 
 #************************************************************************************************************************************************************************************
@@ -161,9 +162,9 @@ sudo env "$@" "$outfile" -install -location /usr/share/discord
 
 #************************************************************************************************************************************************************************************
 upd-ugr
-sudo apt autoclean -y
-sudo apt autoremove -y
-sudo apt autoclean -y
+sudo apt-get autoclean -y
+sudo apt-get autoremove -y
+sudo apt-get autoclean -y
 
 
 
